@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 import models
-from database.database import engine
+from database.database import engine, Base
 from routes import estudantes, disciplinas, professores, matriculas
 
 models.Base.metadata.create_all(bind=engine)
