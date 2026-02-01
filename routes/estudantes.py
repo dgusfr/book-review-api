@@ -1,9 +1,12 @@
 from typing import List
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session, joinedload
-from database.database import get_db
+
 import models
-import database.schemas as schemas
+from database.database import get_db
+from database import schemas
+from security import get_password_hash
 
 router = APIRouter()
 
@@ -19,7 +22,11 @@ def listar_estudantes(db: Session = Depends(get_db)):
 @router.post("/estudantes/", response_model=schemas.Estudante)
 def criar_estudante(estudante: schemas.EstudanteCreate, db: Session = Depends(get_db)):
     db_estudante = models.Estudante(
-        nome=estudante.nome, perfil=models.Perfil(**estudante.perfil.model_dump())
+        nome=estudante.nome,
+        email=estudante.email,
+        senha_hash=get_password_hash(estudante.senha),
+        role="estudante",
+        perfil=models.Perfil(**estudante.perfil.model_dump()),
     )
     db.add(db_estudante)
     db.commit()
