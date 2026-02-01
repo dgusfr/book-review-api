@@ -1,7 +1,7 @@
 from typing import List
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session, joinedload
-from database import get_db
+from database.database import get_db
 import models
 import schemas
 

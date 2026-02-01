@@ -1,6 +1,6 @@
 from sqlalchemy import Column, String, Integer, ForeignKey
 from sqlalchemy.orm import relationship
-from database import Base
+from database.database import Base
 
 
 # Esta classe a baixo representa a tabela de estudantes e define as colunas básicas (id, nome, email) e as relações 1:1 (Perfil), 1:N (Matrícula) e N:1 (Professor).
