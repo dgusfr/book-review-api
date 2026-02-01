@@ -105,14 +105,5 @@ curl -X POST http://localhost:8000/matriculas/ \
 ```
 
 ---
----
-
-## Melhorias Futuras
-
-* Implementação de autenticação OAuth2 com JWT.
-* Criação de scripts de semente automática (seed) a partir dos arquivos JSON presentes na pasta `populating_database`.
-* Documentação interativa completa via Swagger UI (acessível em `/docs`).
-
----
 
 Desenvolvido por **Diego Franco**

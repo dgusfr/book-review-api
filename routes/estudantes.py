@@ -2,6 +2,7 @@ from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session, joinedload
+from security import get_password_hash
 
 import models
 from database.database import get_db
@@ -34,6 +35,7 @@ def criar_estudante(estudante: schemas.EstudanteCreate, db: Session = Depends(ge
     db_estudante = models.Estudante(
         nome=estudante.nome,
         email=estudante.email,
+        senha_hash=get_password_hash(estudante.senha),
         perfil=models.Perfil(**estudante.perfil.model_dump()),
     )
 
