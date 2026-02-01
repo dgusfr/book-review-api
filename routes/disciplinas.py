@@ -5,15 +5,15 @@ from database.database import get_db
 import models
 import schemas
 
-app = APIRouter()
+router = APIRouter()
 
 
-@app.get("/disciplinas/", response_model=List[schemas.Disciplina])
+@router.get("/disciplinas/", response_model=List[schemas.Disciplina])
 def listar_disciplinas(db: Session = Depends(get_db)):
     return db.query(models.Disciplina).all()
 
 
-@app.post("/disciplinas/", response_model=schemas.Disciplina)
+@router.post("/disciplinas/", response_model=schemas.Disciplina)
 def criar_disciplina(
     disciplina: schemas.DisciplinaCreate, db: Session = Depends(get_db)
 ):

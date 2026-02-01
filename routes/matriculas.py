@@ -5,15 +5,15 @@ from database.database import get_db
 import models
 import schemas
 
-app = APIRouter()
+router = APIRouter()
 
 
-@app.get("/matriculas/", response_model=List[schemas.Matricula])
+@router.get("/matriculas/", response_model=List[schemas.Matricula])
 def listar_matriculas(db: Session = Depends(get_db)):
     return db.query(models.Matricula).all()
 
 
-@app.post("/matriculas/", response_model=schemas.Matricula)
+@router.post("/matriculas/", response_model=schemas.Matricula)
 def criar_matricula(matricula: schemas.MatriculaCreate, db: Session = Depends(get_db)):
     db_matricula = models.Matricula(**matricula.model_dump())
     db.add(db_matricula)
