@@ -11,21 +11,17 @@ from database import schemas
 router = APIRouter(tags=["estudantes"])
 
 
-@router.get(
-    "/estudantes/?limit={limit}&skip={skip}?ilike={name}",
-    response_model=List[schemas.Estudante],
-)
+@router.get("/estudantes/", response_model=List[schemas.Estudante])
 def listar_estudantes(
     skip: int = 0, limit: int = 10, name: str = None, db: Session = Depends(get_db)
 ):
-    estudantes = (
-        db.query(models.Estudante)
-        .options(joinedload(models.Estudante.perfil))
-        .offset(skip)
-        .limit(limit)
-        .filter(models.Estudante.nome.ilike(f"%{name}%") if name else True)
-        .all()
-    )
+    estudantes = db.query(models.Estudante).options(joinedload(models.Estudante.perfil))
+
+    if estudantes:
+        query = estudantes.filter(models.Estudante.nome.ilike(f"%{name}%"))
+
+    estudantes = estudantes.offset(skip).limit(limit).all()
+
     return estudantes
 
 

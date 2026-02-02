@@ -15,7 +15,6 @@ def listar_matriculas(db: Session = Depends(get_db)):
 
 @router.post("/matriculas/", response_model=schemas.Matricula)
 def criar_matricula(matricula: schemas.MatriculaCreate, db: Session = Depends(get_db)):
-    db_matricula = models.Matricula(**matricula.model_dump())
     count_matriculas = (
         db.query(models.Matricula)
         .filter(models.Matricula.estudante_id == matricula.estudante_id)
@@ -24,7 +23,10 @@ def criar_matricula(matricula: schemas.MatriculaCreate, db: Session = Depends(ge
     if count_matriculas >= 5:
         raise HTTPException(
             status_code=400,
+            detail="O estudante já possui o número máximo de matrículas permitidas (5).",
         )
+
+    db_matricula = models.Matricula(**matricula.model_dump())
     db.add(db_matricula)
     db.commit()
     db.refresh(db_matricula)
