@@ -12,9 +12,12 @@ router = APIRouter(tags=["estudantes"])
 
 
 @router.get(
-    "/estudantes/?limit={limit}&skip={skip}", response_model=List[schemas.Estudante]
+    "/estudantes/?limit={limit}&skip={skip}?name={name}",
+    response_model=List[schemas.Estudante],
 )
-def listar_estudantes(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+def listar_estudantes(
+    skip: int = 0, limit: int = 10, name: str = None, db: Session = Depends(get_db)
+):
     estudantes = (
         db.query(models.Estudante)
         .options(joinedload(models.Estudante.perfil))
