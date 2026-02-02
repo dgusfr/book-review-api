@@ -21,6 +21,7 @@ def criar_matricula(matricula: schemas.MatriculaCreate, db: Session = Depends(ge
         .filter(models.Matricula.estudante_id == matricula.estudante_id)
         .count()
     )
+    if count_matriculas >= 5:
     db.add(db_matricula)
     db.commit()
     db.refresh(db_matricula)
