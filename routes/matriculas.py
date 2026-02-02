@@ -22,6 +22,9 @@ def criar_matricula(matricula: schemas.MatriculaCreate, db: Session = Depends(ge
         .count()
     )
     if count_matriculas >= 5:
+        raise HTTPException(
+            status_code=400,
+        )
     db.add(db_matricula)
     db.commit()
     db.refresh(db_matricula)
