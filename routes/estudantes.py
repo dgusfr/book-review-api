@@ -11,10 +11,16 @@ from database import schemas
 router = APIRouter(tags=["estudantes"])
 
 
-@router.get("/estudantes/", response_model=List[schemas.Estudante])
-def listar_estudantes(db: Session = Depends(get_db)):
+@router.get(
+    "/estudantes/?limit={limit}&skip={skip}", response_model=List[schemas.Estudante]
+)
+def listar_estudantes(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     estudantes = (
-        db.query(models.Estudante).options(joinedload(models.Estudante.perfil)).all()
+        db.query(models.Estudante)
+        .options(joinedload(models.Estudante.perfil))
+        .offset(skip)
+        .limit(limit)
+        .all()
     )
     return estudantes
 
