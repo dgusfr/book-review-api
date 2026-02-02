@@ -16,6 +16,11 @@ def listar_matriculas(db: Session = Depends(get_db)):
 @router.post("/matriculas/", response_model=schemas.Matricula)
 def criar_matricula(matricula: schemas.MatriculaCreate, db: Session = Depends(get_db)):
     db_matricula = models.Matricula(**matricula.model_dump())
+    count_matriculas = (
+        db.query(models.Matricula)
+        .filter(models.Matricula.estudante_id == matricula.estudante_id)
+        .count()
+    )
     db.add(db_matricula)
     db.commit()
     db.refresh(db_matricula)

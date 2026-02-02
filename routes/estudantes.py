@@ -12,7 +12,7 @@ router = APIRouter(tags=["estudantes"])
 
 
 @router.get(
-    "/estudantes/?limit={limit}&skip={skip}?name={name}",
+    "/estudantes/?limit={limit}&skip={skip}?ilike={name}",
     response_model=List[schemas.Estudante],
 )
 def listar_estudantes(
@@ -23,6 +23,7 @@ def listar_estudantes(
         .options(joinedload(models.Estudante.perfil))
         .offset(skip)
         .limit(limit)
+        .filter(models.Estudante.nome.ilike(f"%{name}%") if name else True)
         .all()
     )
     return estudantes
