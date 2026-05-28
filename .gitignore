@@ -32,3 +32,5 @@ htmlcov/
 # IDE / editor
 .vscode/
 .idea/
+
+.python-version
