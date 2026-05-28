@@ -49,10 +49,10 @@ poetry run python main.py
 
 ```bash
 # Servidor de desenvolvimento com hot-reload
-poetry run fastapi dev main.py
 
-# Ou rodando como script
-poetry run python main.py
+pip install "fastapi[standard]"
+
+fastapi dev 
 ```
 
 ### Opção 2: Ativar o ambiente virtual
