@@ -1,47 +1,62 @@
 # FastAPI API
 
-API simples criada com FastAPI.
+API simples criada com FastAPI, com dependencias e ambiente gerenciados 100% pelo Poetry.
 
 ## Requisitos
 
 - Python 3.10+
-- pip
+- Poetry
 
-## Ambiente virtual
+## Instalar o Poetry
 
-### Windows (PowerShell)
+Recomendado via pipx:
 
 ```bash
-python -m venv .venv
-.\venv\Scripts\Activate.ps1
+pipx install poetry
 ```
 
-### Linux
+Se nao tiver o pipx instalado:
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
+python -m pip install --user pipx
+python -m pipx ensurepath
 ```
 
-### macOS
+## Configurar o ambiente com Poetry
+
+### 1) (Opcional) Manter o ambiente virtual dentro do projeto
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
+poetry config virtualenvs.in-project true
 ```
 
-## Instalacao de dependencias
+### 2) Inicializar o projeto (se ainda nao existir `pyproject.toml`)
 
 ```bash
-pip install "fastapi[standard]"
+poetry init
+```
+
+Quando for perguntado pelas dependencias, adicione:
+
+```bash
+fastapi[standard]
+```
+
+### 3) Instalar dependencias
+
+```bash
+poetry install
 ```
 
 ## Rodar o servidor
 
 ```bash
-fastapi dev
+poetry run fastapi dev main.py
 ```
 
-## Notas
+Ou entrar no shell do Poetry e rodar o comando direto:
 
-- Se o comando `fastapi dev` nao for encontrado, verifique se o ambiente virtual esta ativado.
+```bash
+poetry shell
+fastapi dev main.py
+```
