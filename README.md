@@ -1,109 +1,47 @@
-# API de Gerenciamento Escolar - FastAPI
+# FastAPI API
 
-![Python](https://img.shields.io/badge/Python-3.10%2B-blue?style=for-the-badge&logo=python&logoColor=white)
-![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
-![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-D71F00?style=for-the-badge&logo=sqlalchemy&logoColor=white)
-![Pydantic](https://img.shields.io/badge/Pydantic-E92063?style=for-the-badge&logo=pydantic&logoColor=white)
+API simples criada com FastAPI.
 
-Esta aplicação foi desenvolvida para gerenciar o ecossistema de uma instituição de ensino, controlando desde o cadastro básico de alunos e professores até a gestão de perfis detalhados e matrículas em disciplinas. O foco principal é demonstrar o uso de relações complexas em bancos de dados relacionais integrados ao FastAPI.
+## Requisitos
 
+- Python 3.10+
+- pip
 
----
+## Ambiente virtual
 
-## Tabela de Conteúdos
-
-* [Arquitetura](#arquitetura)
-* [Tech Stack](#tech-stack)
-* [Documentação da API](#documentação-da-api)
-* [Estrutura do Projeto](#estrutura-do-projeto)
-* [Melhorias Futuras](#melhorias-futuras)
-
----
-
----
-
-## Arquitetura
-
-O projeto utiliza o **SQLAlchemy** como ORM para mapear o banco de dados PostgreSQL, garantindo a integridade referencial entre as tabelas.
-
-### Destaques Técnicos:
-
-* **Relação 1:1 (One-to-One)**: Implementação entre `Estudante` e `Perfil`, onde cada aluno possui um registro único de detalhes adicionais como idade e endereço.
-* **Relação 1:N (One-to-Many)**: Vínculo entre `Professor` e seus `Estudantes` associados através da chave estrangeira `professor_id`.
-* **Relação N:N (Many-to-Many)**: Gerenciada pela tabela de associação `Matricula`, conectando os IDs de `Estudante` e `Disciplina`.
-* **Carregamento Otimizado**: Uso de `joinedload` para carregar o perfil do estudante em uma única consulta ao banco, evitando múltiplas requisições (N+1 problem).
-
----
-
----
-
-## Documentação da API
-
-### Estudantes e Perfis
-
-Criação de estudante com criação automática de perfil vinculado.
-**Endpoint**: `POST /estudantes/`
+### Windows (PowerShell)
 
 ```bash
-curl -X POST http://localhost:8000/estudantes/ \
--H "Content-Type: application/json" \
--d '{
-    "nome": "Gustavo Rocha",
-    "email": "gustavo.rocha@didatica.com",
-    "perfil": {
-        "idade": 16,
-        "endereco": "Rua das Flores, 123"
-    }
-}'
-
+python -m venv .venv
+.\venv\Scripts\Activate.ps1
 ```
 
----
-
-### Disciplinas
-
-Gerenciamento das matérias oferecidas na instituição.
-**Endpoint**: `GET /disciplinas/`
+### Linux
 
 ```bash
-curl -X GET http://localhost:8000/disciplinas/
-
+python3 -m venv .venv
+source .venv/bin/activate
 ```
 
----
-
-### Professores
-
-Cadastro de docentes responsáveis pelos alunos.
-**Endpoint**: `POST /professores/`
+### macOS
 
 ```bash
-curl -X POST http://localhost:8000/professores/ \
--H "Content-Type: application/json" \
--d '{
-    "nome": "Fábio Santos"
-}'
-
+python3 -m venv .venv
+source .venv/bin/activate
 ```
 
----
-
-### Matrículas
-
-Vinculação de alunos às disciplinas existentes através de seus IDs.
-**Endpoint**: `POST /matriculas/`
+## Instalacao de dependencias
 
 ```bash
-curl -X POST http://localhost:8000/matriculas/ \
--H "Content-Type: application/json" \
--d '{
-    "estudante_id": 1,
-    "disciplina_id": 7
-}'
-
+pip install "fastapi[standard]"
 ```
 
----
+## Rodar o servidor
 
-Desenvolvido por **Diego Franco**
+```bash
+fastapi dev
+```
+
+## Notas
+
+- Se o comando `fastapi dev` nao for encontrado, verifique se o ambiente virtual esta ativado.

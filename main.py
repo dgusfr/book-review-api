@@ -1,19 +1,21 @@
+import asyncio
+
+import uvicorn
 from fastapi import FastAPI
-from fastapi.exceptions import RequestValidationError
-from error_handlers import validation_exception_handler
-
-import models
-from database.database import engine
-
-from routes import auth, estudantes, disciplinas, professores, matriculas
-
-models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
-app.add_exception_handler(RequestValidationError, validation_exception_handler)
 
-app.include_router(auth.router)
-app.include_router(estudantes.router)
-app.include_router(disciplinas.router)
-app.include_router(professores.router)
-app.include_router(matriculas.router)
+
+@app.get("/")
+async def root():
+    await asyncio.sleep(2)  # Simulando uma operação assíncrona
+    return {"message": "Hello World"}
+
+
+@app.get("/greet/{name}")
+async def greet_name(name: str):
+    return {"message": f"Hello, {name}!"}
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000, workers=1)
