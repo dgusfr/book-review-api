@@ -1,17 +1,26 @@
+"""Database connection handler.
+
+This module connects to SQLite and creates tables from the shared SQLAlchemy metadata.
 """
 
-This module make connection to the database and create tables if they don't exist.
-"""
+from pathlib import Path
 
 from databases import Database
+from sqlalchemy import create_engine
+
+from model.settings.db_metadata import metadata
 
 
 class DBConnectionHandler:
     def __init__(self) -> None:
-        self.__connection_string = "sqlite:///./schema.db"
+        base_dir = Path(__file__).resolve().parents[3]
+        sqlite_file = base_dir / "schema.db"
+        self.__connection_string = f"sqlite:///{sqlite_file}"
         self.__database = Database(self.__connection_string)
+        self.__engine = create_engine(self.__connection_string)
 
     async def connect(self):
+        metadata.create_all(self.__engine)
         await self.__database.connect()
 
     async def disconnect(self):

@@ -3,8 +3,8 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 
-from src.controllers.users import router as users_router
-from src.db.connection import create_tables, database
+from controllers.users import router as users_router
+from db.connection import create_tables, database
 
 
 @asynccontextmanager

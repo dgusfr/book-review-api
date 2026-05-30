@@ -1,6 +1,6 @@
 from typing import Dict, List
 
-from src.db.connection import USERS, database
+from db.connection import USERS, database
 
 
 async def get_all_users() -> List[Dict]:

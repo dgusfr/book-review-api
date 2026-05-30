@@ -6,7 +6,7 @@ and transform results as needed.
 
 from typing import Dict, List
 
-from src.database import USERS, database
+from database import USERS, database
 
 
 async def get_all_users() -> List[Dict]:

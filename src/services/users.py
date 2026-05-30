@@ -1,6 +1,6 @@
 from typing import Dict, List
 
-from src.repos.users import get_all_users as repo_get_all
+from repos.users import get_all_users as repo_get_all
 
 
 async def list_users() -> List[Dict]:

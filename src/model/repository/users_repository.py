@@ -1,7 +1,7 @@
-from src.model.entities.users import (
+from model.entities.users import (
     Users,
 )
-from src.model.settings.db_connection_handler import (
+from model.settings.db_connection_handler import (
     db_connection_handler,
 )
 
