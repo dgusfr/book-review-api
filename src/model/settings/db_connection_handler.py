@@ -17,5 +17,8 @@ class DBConnectionHandler:
     async def disconnect(self):
         await self.__database.disconnect()
 
+    def get_database(self) -> Database:
+        return self.__database
+
 
 db_connection_handler = DBConnectionHandler()

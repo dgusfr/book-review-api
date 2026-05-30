@@ -1,4 +1,0 @@
-CREATE TABLE IF NOT EXISTS `users` (
-  `id` INTEGER PRIMARY KEY AUTO_INCREMENT,
-  `username` varchar(255) NOT NULL
-) 

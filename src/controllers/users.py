@@ -1,9 +1,10 @@
 from typing import List
+
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 
-from src.services.users import list_users
 from src.schemas.user import UserOut
+from src.services.users import list_users
 
 router = APIRouter()
 

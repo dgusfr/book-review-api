@@ -11,8 +11,8 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 
-from database import create_tables, database
-from run import get_all_users
+from src.database import create_tables, database
+from src.run import get_all_users
 
 
 @asynccontextmanager

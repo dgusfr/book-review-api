@@ -5,6 +5,7 @@ of the app can import it from a single place.
 """
 
 from pathlib import Path
+
 import databases
 from sqlalchemy import Column, Integer, MetaData, String, Table, create_engine
 from sqlalchemy.engine import Engine
