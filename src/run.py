@@ -1,14 +1,14 @@
 import asyncio
 
-from model.repository.users_repository import UsersRepository
+from controllers.users import UsersController
 from model.settings.db_connection_handler import db_connection_handler
 
 
 async def main():
     await db_connection_handler.connect()
 
-    users_repository = UsersRepository()
-    users = await users_repository.get_all_users()
+    users_controller = UsersController()
+    users = await users_controller.list_users()
 
     if not users:
         print("Nenhum usuario encontrado.")

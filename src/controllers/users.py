@@ -1,15 +1,22 @@
-from typing import List
-
-from fastapi import APIRouter
-from fastapi.responses import JSONResponse
-
-from schemas.user import UserOut
-from services.users import list_users
-
-router = APIRouter()
+from model.repository.users_repository import UsersRepository
 
 
-@router.get("/", response_model=List[UserOut])
-async def get_users():
-    users = await list_users()
-    return JSONResponse(content={"users": users})
+class UsersController:
+    """Controller layer for user-related operations."""
+
+    def __init__(self):
+        self.__users_repository = UsersRepository()
+
+    async def list_users(self) -> list:
+        users = await self.__users_repository.get_all_users()
+
+        list_users = []
+        for user in users:
+            list_users.append(
+                {
+                    "id": user["id"],
+                    "username": user["username"],
+                }
+            )
+
+        return list_users
