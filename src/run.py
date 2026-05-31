@@ -10,8 +10,11 @@ async def main():
     users_repository = UsersRepository()
     users = await users_repository.get_all_users()
 
-    for user in users:
-        print(user.name)
+    if not users:
+        print("Nenhum usuario encontrado.")
+    else:
+        for user in users:
+            print(user)
 
     await db_connection_handler.disconnect()
 

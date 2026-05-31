@@ -13,7 +13,7 @@ from model.settings.db_metadata import metadata
 
 class DBConnectionHandler:
     def __init__(self) -> None:
-        base_dir = Path(__file__).resolve().parents[3]
+        base_dir = Path(__file__).resolve().parents[2]
         sqlite_file = base_dir / "schema.db"
         self.__connection_string = f"sqlite:///{sqlite_file}"
         self.__database = Database(self.__connection_string)
