@@ -2,8 +2,8 @@
 
 from typing import Dict, List, Optional
 
-from app.database.connection import database
-from app.models.user import User
+from src.database.connection import database
+from src.models.user import User
 
 
 class UserService:

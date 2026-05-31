@@ -2,8 +2,8 @@
 
 from typing import List
 
-from app.schemas.user_schema import UserCreate, UserRead, UserUpdate
-from app.services.user_service import UserService
+from src.schemas.user_schema import UserCreate, UserRead, UserUpdate
+from src.services.user_service import UserService
 
 
 class UserController:

@@ -4,8 +4,8 @@ from typing import List
 
 from fastapi import APIRouter, HTTPException
 
-from app.controllers.user_controller import UserController
-from app.schemas.user_schema import UserCreate, UserRead, UserUpdate
+from src.controllers.user_controller import UserController
+from src.schemas.user_schema import UserCreate, UserRead, UserUpdate
 
 router = APIRouter(prefix="/users", tags=["users"])
 

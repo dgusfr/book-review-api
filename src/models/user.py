@@ -2,7 +2,7 @@
 
 from sqlalchemy import Column, Integer, String, Table
 
-from app.database.connection import metadata
+from src.database.connection import metadata
 
 User = Table(
     "users",

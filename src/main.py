@@ -4,8 +4,8 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from app.database.connection import create_tables, database
-from app.routes.user_routes import router as user_router
+from src.database.connection import create_tables, database
+from src.routes.user_routes import router as user_router
 
 
 @asynccontextmanager

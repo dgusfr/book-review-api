@@ -7,8 +7,8 @@ from pathlib import Path
 # Add app to path
 sys.path.insert(0, str(Path(__file__).parent))
 
-from app.database.connection import create_tables, database
-from app.services.user_service import UserService
+from src.database.connection import create_tables, database
+from src.services.user_service import UserService
 
 
 async def seed_data():
