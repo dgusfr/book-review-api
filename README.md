@@ -1,99 +1,161 @@
-# ERP API
+# FastAPI User Management API
 
-API desenvolvida com FastAPI, com dependências e ambiente gerenciados 100% pelo Poetry.
+API RESTful desenvolvida com FastAPI seguindo **Clean Architecture**, com gerenciamento de dependências e ambiente por Poetry.
 
 ## Requisitos
 
-- Python 3.13+ (ou versão definida em `pyproject.toml`)
-- pyenv (para gerenciar versões do Python)
+- Python 3.13+
 - Poetry 2.0+
 
-## ⚙️ Configurar o projeto localmente
+## 📁 Estrutura do Projeto
 
-### 1) Instalar Poetry via pipx (se não tiver)
-
-```bash
-python -m pip install --user pipx
-python -m pipx ensurepath
-pipx install poetry
+```
+python_FastAPI/
+├── app/
+│   ├── __init__.py
+│   ├── main.py                          # Entrada da aplicação FastAPI
+│   ├── database/
+│   │   └── connection.py                # Configuração de banco de dados
+│   ├── models/
+│   │   └── user.py                      # Definição da tabela User (SQLAlchemy Core)
+│   ├── schemas/
+│   │   └── user_schema.py               # Validação Pydantic (Request/Response)
+│   ├── services/
+│   │   └── user_service.py              # Lógica de negócio
+│   ├── controllers/
+│   │   └── user_controller.py           # Orquestração de requisições
+│   ├── routes/
+│   │   └── user_routes.py               # Definição das rotas HTTP
+│   └── server/
+│       └── run_server.py                # Script para iniciar servidor
+├── app.db                               # Banco de dados SQLite (gerado)
+├── pyproject.toml                       # Dependências do projeto
+├── seed.py                              # Script para popular dados iniciais
+└── README.md                            # Este arquivo
 ```
 
-### 2) Clonar o repositório e acessar a pasta
+## ⚙️ Configuração
 
-```bash
-git clone <seu-repositorio>
-cd python_FastAPI
-```
-
-### 3) Instalar as dependências do projeto
+### 1. Instalar dependências
 
 ```bash
 poetry install
 ```
 
-Poetry vai automaticamente:
-- Criar um ambiente virtual isolado
-- Instalar todas as dependências do `pyproject.toml`
-- Usar a versão do Python definida (via `poetry.lock`)
-
-### 4) Verificar a instalação
+### 2. Ativar o ambiente (opcional)
 
 ```bash
-poetry run python --version
-poetry run python main.py
-```
-
-## 🚀 Rodar o servidor
-
-### Opção 1: Rodar comandos com Poetry (recomendado)
-
-```bash
-# Servidor de desenvolvimento com hot-reload
-
-pip install "fastapi[standard]"
-
-fastapi dev 
-```
-
-### Opção 2: Ativar o ambiente virtual
-
-Com Poetry 2.0+:
-
-```bash
-poetry env activate
-# Agora pode rodar comandos direto
-python main.py
-```
-
-Se preferir o comando antigo `poetry shell`, instale o plugin:
-
-```bash
-poetry self add poetry-plugin-shell
 poetry shell
 ```
 
-## 📦 Gerenciar dependências
+## 🚀 Rodar o Servidor
 
-### Adicionar uma dependência
-
-```bash
-poetry add fastapi
-poetry add pytest --group dev
-```
-
-### Atualizar dependências
+### Opção 1: Com Poetry (recomendado)
 
 ```bash
-poetry update
+poetry run uvicorn app.main:app --host 127.0.0.1 --port 8001 --reload
 ```
 
-### Remover uma dependência
+### Opção 2: Executar script
 
 ```bash
-poetry remove fastapi
+python app/server/run_server.py
 ```
 
-## 📝 Arquivo de lock
+### Opção 3: Dentro do shell Poetry
 
-- `pyproject.toml` - Define as dependências do projeto
-- `poetry.lock` - Garante versões exatas (sempre fazer commit no GitHub)
+```bash
+poetry shell
+python -m uvicorn app.main:app --host 127.0.0.1 --port 8001 --reload
+```
+
+**Server:** http://127.0.0.1:8001  
+**Docs:** http://127.0.0.1:8001/docs
+
+## 📊 API Endpoints
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/` | Mensagem de boas-vindas |
+| GET | `/health` | Status de saúde |
+| GET | `/users` | Listar todos os usuários |
+| POST | `/users` | Criar novo usuário |
+| GET | `/users/{id}` | Obter usuário por ID |
+| PUT | `/users/{id}` | Atualizar usuário |
+| DELETE | `/users/{id}` | Deletar usuário |
+
+### Exemplos de Uso
+
+**Listar usuários:**
+```bash
+curl http://127.0.0.1:8001/users
+```
+
+**Criar usuário:**
+```bash
+curl -X POST http://127.0.0.1:8001/users \
+  -H "Content-Type: application/json" \
+  -d '{"username":"João","email":"joao@example.com"}'
+```
+
+**Obter usuário:**
+```bash
+curl http://127.0.0.1:8001/users/1
+```
+
+**Atualizar usuário:**
+```bash
+curl -X PUT http://127.0.0.1:8001/users/1 \
+  -H "Content-Type: application/json" \
+  -d '{"username":"João Silva","email":"joao.silva@example.com"}'
+```
+
+**Deletar usuário:**
+```bash
+curl -X DELETE http://127.0.0.1:8001/users/1
+```
+
+## 🌱 Popular Banco de Dados
+
+```bash
+poetry run python seed.py
+```
+
+Insere 3 usuários iniciais na base.
+
+## 🗄️ Banco de Dados
+
+- **Tipo:** SQLite
+- **Arquivo:** `app.db`
+- **Acesso:** Async via `databases`
+
+Tabelas criadas automaticamente no startup.
+
+## 🏗️ Arquitetura Clean
+
+- **Routes:** Endpoints HTTP
+- **Controllers:** Orquestração
+- **Services:** Lógica de negócio
+- **Models:** Estrutura das tabelas
+- **Schemas:** Validação Pydantic
+- **Database:** Conexão e metadata
+
+## 📝 Schema
+
+**Tabela `users`:**
+
+| Campo | Tipo | Restrições |
+|-------|------|-----------|
+| id | INTEGER | PRIMARY KEY, AUTOINCREMENT |
+| username | STRING(255) | NOT NULL, INDEXED |
+| email | STRING(255) | NULLABLE |
+
+## 📦 Dependências Principais
+
+- FastAPI
+- Uvicorn
+- SQLAlchemy
+- databases
+- Pydantic
+
+Ver `pyproject.toml` para lista completa.

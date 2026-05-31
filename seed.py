@@ -1,19 +1,34 @@
-import sqlite3
+"""Seed script to populate initial test data."""
+
+import asyncio
+import sys
 from pathlib import Path
 
-DB_PATH = Path(__file__).resolve().parent / "src" / "schema.db"
+# Add app to path
+sys.path.insert(0, str(Path(__file__).parent))
+
+from app.database.connection import create_tables, database
+from app.services.user_service import UserService
 
 
-with sqlite3.connect(DB_PATH) as connection:
-    cursor = connection.cursor()
-    cursor.executemany(
-        "INSERT INTO users (username) VALUES (?)",
-        [
-            ("João",),
-            ("Maria",),
-            ("Pedro",),
-        ],
-    )
-    connection.commit()
+async def seed_data():
+    """Insert initial test users into the database."""
+    await create_tables()
+    await database.connect()
 
-print("3 usuarios inseridos com sucesso.")
+    users_data = [
+        {"username": "João", "email": "joao@example.com"},
+        {"username": "Maria", "email": "maria@example.com"},
+        {"username": "Pedro", "email": "pedro@example.com"},
+    ]
+
+    try:
+        for user in users_data:
+            await UserService.create_user(user["username"], user["email"])
+        print(f"✓ {len(users_data)} usuários inseridos com sucesso.")
+    finally:
+        await database.disconnect()
+
+
+if __name__ == "__main__":
+    asyncio.run(seed_data())
