@@ -1,6 +1,7 @@
 """User database model using SQLAlchemy Core."""
 
-from sqlalchemy import Table, Column, Integer, String
+from sqlalchemy import Column, Integer, String, Table
+
 from app.database.connection import metadata
 
 User = Table(

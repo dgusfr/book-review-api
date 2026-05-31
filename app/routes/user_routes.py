@@ -1,7 +1,8 @@
 """User API routes."""
 
-from fastapi import APIRouter, HTTPException
 from typing import List
+
+from fastapi import APIRouter, HTTPException
 
 from app.controllers.user_controller import UserController
 from app.schemas.user_schema import UserCreate, UserRead, UserUpdate

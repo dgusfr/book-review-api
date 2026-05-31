@@ -1,6 +1,7 @@
 """User service with business logic."""
 
-from typing import List, Dict, Optional
+from typing import Dict, List, Optional
+
 from app.database.connection import database
 from app.models.user import User
 
@@ -30,7 +31,9 @@ class UserService:
         return {"id": last_record_id, "username": username, "email": email}
 
     @staticmethod
-    async def update_user(user_id: int, username: Optional[str] = None, email: Optional[str] = None) -> Optional[Dict]:
+    async def update_user(
+        user_id: int, username: Optional[str] = None, email: Optional[str] = None
+    ) -> Optional[Dict]:
         """Update an existing user."""
         values = {}
         if username is not None:

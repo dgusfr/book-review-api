@@ -1,8 +1,9 @@
 """User controller handling request logic."""
 
 from typing import List
+
+from app.schemas.user_schema import UserCreate, UserRead, UserUpdate
 from app.services.user_service import UserService
-from app.schemas.user_schema import UserRead, UserCreate, UserUpdate
 
 
 class UserController:
@@ -25,17 +26,13 @@ class UserController:
     @staticmethod
     async def create_user(user_data: UserCreate) -> UserRead:
         """Create a new user."""
-        new_user = await UserService.create_user(
-            username=user_data.username, email=user_data.email
-        )
+        new_user = await UserService.create_user(username=user_data.username, email=user_data.email)
         return UserRead(**new_user)
 
     @staticmethod
     async def update_user(user_id: int, user_data: UserUpdate) -> UserRead:
         """Update an existing user."""
-        updated_user = await UserService.update_user(
-            user_id, user_data.username, user_data.email
-        )
+        updated_user = await UserService.update_user(user_id, user_data.username, user_data.email)
         if not updated_user:
             raise ValueError(f"User {user_id} not found")
         return UserRead(**updated_user)

@@ -1,6 +1,7 @@
 """Database connection and metadata."""
 
 from pathlib import Path
+
 import databases
 from sqlalchemy import MetaData, create_engine
 

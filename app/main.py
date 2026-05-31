@@ -1,8 +1,10 @@
 """FastAPI application setup."""
 
 from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
-from app.database.connection import database, create_tables
+
+from app.database.connection import create_tables, database
 from app.routes.user_routes import router as user_router
 
 
