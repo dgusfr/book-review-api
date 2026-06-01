@@ -1,161 +1,97 @@
-# FastAPI User Management API
+# Book Review API
 
-API RESTful desenvolvida com FastAPI seguindo **Clean Architecture**, com gerenciamento de dependências e ambiente por Poetry.
+API REST de reviews de livros usando FastAPI, PostgreSQL, Redis, Celery e SQLModel.
+
+Este projeto foi reorganizado em uma arquitetura inspirada em MVC:
+
+```text
+src/
+├── controllers/  # endpoints/rotas FastAPI
+├── models/       # modelos SQLModel/tabelas do banco
+├── views/        # schemas Pydantic de entrada e saída
+└── core/         # config, banco, Redis, services, repositories, segurança, mail e tasks
+```
 
 ## Requisitos
 
-- Python 3.13+
-- Poetry 2.0+
+- Python 3.10+
+- Poetry
+- PostgreSQL
+- Redis
+- Docker e Docker Compose, opcional mas recomendado
 
-## 📁 Estrutura do Projeto
+## Configuração local
 
-```
-python_FastAPI/
-├── app/
-│   ├── __init__.py
-│   ├── main.py                          # Entrada da aplicação FastAPI
-│   ├── database/
-│   │   └── connection.py                # Configuração de banco de dados
-│   ├── models/
-│   │   └── user.py                      # Definição da tabela User (SQLAlchemy Core)
-│   ├── schemas/
-│   │   └── user_schema.py               # Validação Pydantic (Request/Response)
-│   ├── services/
-│   │   └── user_service.py              # Lógica de negócio
-│   ├── controllers/
-│   │   └── user_controller.py           # Orquestração de requisições
-│   ├── routes/
-│   │   └── user_routes.py               # Definição das rotas HTTP
-│   └── server/
-│       └── run_server.py                # Script para iniciar servidor
-├── app.db                               # Banco de dados SQLite (gerado)
-├── pyproject.toml                       # Dependências do projeto
-├── seed.py                              # Script para popular dados iniciais
-└── README.md                            # Este arquivo
+Copie o arquivo de exemplo:
+
+```bash
+cp .env.example .env
 ```
 
-## ⚙️ Configuração
-
-### 1. Instalar dependências
+Instale as dependências:
 
 ```bash
 poetry install
 ```
 
-### 2. Ativar o ambiente (opcional)
+Gere o lockfile, caso ele ainda não exista:
 
 ```bash
-poetry shell
+poetry lock
 ```
 
-## 🚀 Rodar o Servidor
-
-### Opção 1: Com Poetry (recomendado)
+Rode as migrations:
 
 ```bash
-poetry run uvicorn app.main:app --host 127.0.0.1 --port 8001 --reload
+poetry run alembic upgrade head
 ```
 
-### Opção 2: Executar script
+Suba a API:
 
 ```bash
-python app/server/run_server.py
+poetry run uvicorn src.main:app --reload
 ```
 
-### Opção 3: Dentro do shell Poetry
+Acesse:
+
+```text
+http://localhost:8000/api/v1/docs
+```
+
+## Rodando com Docker
+
+Crie o `.env` a partir do `.env.example` e execute:
 
 ```bash
-poetry shell
-python -m uvicorn app.main:app --host 127.0.0.1 --port 8001 --reload
+docker compose up --build
 ```
 
-**Server:** http://127.0.0.1:8001  
-**Docs:** http://127.0.0.1:8001/docs
+A API ficará disponível em:
 
-## 📊 API Endpoints
-
-| Método | Endpoint | Descrição |
-|--------|----------|-----------|
-| GET | `/` | Mensagem de boas-vindas |
-| GET | `/health` | Status de saúde |
-| GET | `/users` | Listar todos os usuários |
-| POST | `/users` | Criar novo usuário |
-| GET | `/users/{id}` | Obter usuário por ID |
-| PUT | `/users/{id}` | Atualizar usuário |
-| DELETE | `/users/{id}` | Deletar usuário |
-
-### Exemplos de Uso
-
-**Listar usuários:**
-```bash
-curl http://127.0.0.1:8001/users
+```text
+http://localhost:8000/api/v1/docs
 ```
 
-**Criar usuário:**
-```bash
-curl -X POST http://127.0.0.1:8001/users \
-  -H "Content-Type: application/json" \
-  -d '{"username":"João","email":"joao@example.com"}'
-```
+## Celery
 
-**Obter usuário:**
-```bash
-curl http://127.0.0.1:8001/users/1
-```
+Com Docker, o worker Celery já sobe pelo serviço `celery`.
 
-**Atualizar usuário:**
-```bash
-curl -X PUT http://127.0.0.1:8001/users/1 \
-  -H "Content-Type: application/json" \
-  -d '{"username":"João Silva","email":"joao.silva@example.com"}'
-```
-
-**Deletar usuário:**
-```bash
-curl -X DELETE http://127.0.0.1:8001/users/1
-```
-
-## 🌱 Popular Banco de Dados
+Localmente, rode:
 
 ```bash
-poetry run python seed.py
+poetry run celery -A src.core.tasks.celery_app.c_app worker --loglevel=info
 ```
 
-Insere 3 usuários iniciais na base.
+## Testes
 
-## 🗄️ Banco de Dados
+```bash
+poetry run pytest
+```
 
-- **Tipo:** SQLite
-- **Arquivo:** `app.db`
-- **Acesso:** Async via `databases`
+## Observação sobre `poetry.lock`
 
-Tabelas criadas automaticamente no startup.
+O `poetry.lock` não foi incluído neste pacote porque ele deve ser gerado de verdade no seu ambiente com:
 
-## 🏗️ Arquitetura Clean
-
-- **Routes:** Endpoints HTTP
-- **Controllers:** Orquestração
-- **Services:** Lógica de negócio
-- **Models:** Estrutura das tabelas
-- **Schemas:** Validação Pydantic
-- **Database:** Conexão e metadata
-
-## 📝 Schema
-
-**Tabela `users`:**
-
-| Campo | Tipo | Restrições |
-|-------|------|-----------|
-| id | INTEGER | PRIMARY KEY, AUTOINCREMENT |
-| username | STRING(255) | NOT NULL, INDEXED |
-| email | STRING(255) | NULLABLE |
-
-## 📦 Dependências Principais
-
-- FastAPI
-- Uvicorn
-- SQLAlchemy
-- databases
-- Pydantic
-
-Ver `pyproject.toml` para lista completa.
+```bash
+poetry lock
+```
