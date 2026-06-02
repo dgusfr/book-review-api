@@ -88,12 +88,6 @@ Este projeto usa uma arquitetura inspirada em **MVC**, adaptada para uma API Fas
 
 ### Controllers
 
-Ficam em:
-
-```text
-src/controllers/
-```
-
 Responsáveis por:
 
 - declarar os endpoints;
@@ -112,12 +106,6 @@ request -> controller -> service -> repository -> database
 
 ### Models
 
-Ficam em:
-
-```text
-src/models/
-```
-
 Responsáveis por representar as tabelas do banco usando SQLModel.
 
 Principais modelos:
@@ -132,12 +120,6 @@ Principais modelos:
 
 ### Views
 
-Ficam em:
-
-```text
-src/views/
-```
-
 Em uma API REST, a camada `views` representa os schemas de entrada e saída.
 
 Responsáveis por:
@@ -149,12 +131,6 @@ Responsáveis por:
 ---
 
 ### Core
-
-Fica em:
-
-```text
-src/core/
-```
 
 Responsável por partes internas da aplicação:
 
@@ -295,48 +271,6 @@ Você pode copiar o arquivo de exemplo:
 
 ```bash
 cp .env.example .env
-```
-
-Exemplo de `.env` para rodar localmente:
-
-```env
-# Application
-DOMAIN=localhost:8000
-ENVIRONMENT=development
-DEBUG=true
-
-# JWT
-JWT_SECRET=dev-secret-change-me
-JWT_ALGORITHM=HS256
-
-# Database
-DATABASE_URL=postgresql+asyncpg://postgres:postgres@localhost:5432/bookly
-
-# Redis
-REDIS_URL=redis://localhost:6379/0
-
-# Celery
-CELERY_BROKER_URL=redis://localhost:6379/0
-CELERY_RESULT_BACKEND=redis://localhost:6379/0
-
-# Mail
-MAIL_USERNAME=
-MAIL_PASSWORD=
-MAIL_FROM=
-MAIL_FROM_NAME=Bookly
-MAIL_PORT=587
-MAIL_SERVER=smtp.gmail.com
-MAIL_STARTTLS=true
-MAIL_SSL_TLS=false
-USE_CREDENTIALS=true
-VALIDATE_CERTS=true
-```
-
-Para rodar dentro do Docker Compose, a API usa o host `db` para PostgreSQL e `redis` para Redis:
-
-```env
-DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/bookly
-REDIS_URL=redis://redis:6379/0
 ```
 
 ---
@@ -961,20 +895,6 @@ docker compose down
 ---
 
 ## Observações importantes
-
-### 1. `.env` não deve ser commitado
-
-O arquivo `.env` contém segredos e dados locais. Ele deve ficar no `.gitignore`.
-
-Versione apenas:
-
-```text
-.env.example
-```
-
----
-
-### 2. Alinhe a versão do Python
 
 Verifique se a versão do Python no `pyproject.toml` está compatível com a imagem do `Dockerfile`.
 
