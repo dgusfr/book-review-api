@@ -4,12 +4,12 @@ Revision ID: 003_create_tags
 Revises: 002_create_reviews
 Create Date: 2026-06-01
 """
+
 from typing import Sequence, Union
 
-from alembic import op
 import sqlalchemy as sa
 import sqlalchemy.dialects.postgresql as pg
-
+from alembic import op
 
 revision: str = "003_create_tags"
 down_revision: Union[str, None] = "002_create_reviews"

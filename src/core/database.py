@@ -3,9 +3,8 @@ from typing import AsyncGenerator
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlmodel import SQLModel
 
-from src.core.config import Config
 import src.models  # noqa: F401 - registers SQLModel metadata for all models
-
+from src.core.config import Config
 
 async_engine = create_async_engine(
     url=Config.DATABASE_URL,

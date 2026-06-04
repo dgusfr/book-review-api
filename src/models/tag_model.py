@@ -24,12 +24,8 @@ class Tag(SQLModel, table=True):
             default=uuid.uuid4,
         )
     )
-    name: str = Field(
-        sa_column=Column(pg.VARCHAR, nullable=False)
-    )
-    created_at: datetime = Field(
-        sa_column=Column(pg.TIMESTAMP, default=datetime.now)
-    )
+    name: str = Field(sa_column=Column(pg.VARCHAR, nullable=False))
+    created_at: datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now))
 
     books: List["Book"] = Relationship(
         link_model=BookTag,

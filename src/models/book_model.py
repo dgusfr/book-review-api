@@ -36,12 +36,8 @@ class Book(SQLModel, table=True):
         default=None,
         foreign_key="users.uid",
     )
-    created_at: datetime = Field(
-        sa_column=Column(pg.TIMESTAMP, default=datetime.now)
-    )
-    update_at: datetime = Field(
-        sa_column=Column(pg.TIMESTAMP, default=datetime.now)
-    )
+    created_at: datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now))
+    update_at: datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now))
 
     user: Optional["User"] = Relationship(back_populates="books")
     reviews: List["Review"] = Relationship(

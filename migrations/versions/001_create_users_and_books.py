@@ -4,12 +4,12 @@ Revision ID: 001_create_users_and_books
 Revises: None
 Create Date: 2026-06-01
 """
+
 from typing import Sequence, Union
 
-from alembic import op
 import sqlalchemy as sa
 import sqlalchemy.dialects.postgresql as pg
-
+from alembic import op
 
 revision: str = "001_create_users_and_books"
 down_revision: Union[str, None] = None
@@ -26,7 +26,9 @@ def upgrade() -> None:
         sa.Column("first_name", sa.String(), nullable=False),
         sa.Column("last_name", sa.String(), nullable=False),
         sa.Column("role", pg.VARCHAR(), server_default="user", nullable=False),
-        sa.Column("is_verified", sa.Boolean(), nullable=False, server_default=sa.text("false")),
+        sa.Column(
+            "is_verified", sa.Boolean(), nullable=False, server_default=sa.text("false")
+        ),
         sa.Column("password_hash", pg.VARCHAR(), nullable=False),
         sa.Column("created_at", pg.TIMESTAMP(), nullable=True),
         sa.Column("update_at", pg.TIMESTAMP(), nullable=True),

@@ -7,6 +7,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.core.config import Config
 from src.core.database import get_session
+from src.core.dependencies import get_current_user as get_authenticated_user
 from src.core.exceptions import (
     InvalidCredentials,
     InvalidToken,
@@ -23,7 +24,6 @@ from src.core.security.jwt import (
 )
 from src.core.security.password import generate_passwd_hash, verify_password
 from src.core.security.permissions import RoleChecker
-from src.core.dependencies import get_current_user as get_authenticated_user
 from src.core.services.user_service import UserService
 from src.core.tasks.email_tasks import send_email
 from src.views.auth_view import (

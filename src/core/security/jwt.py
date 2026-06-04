@@ -13,7 +13,6 @@ from src.core.config import Config
 from src.core.exceptions import AccessTokenRequired, InvalidToken, RefreshTokenRequired
 from src.core.redis import token_in_blocklist
 
-
 ACCESS_TOKEN_EXPIRY = 3600
 
 
@@ -77,7 +76,9 @@ class TokenBearer(HTTPBearer):
         super().__init__(auto_error=auto_error)
 
     async def __call__(self, request: Request) -> dict | None:
-        credentials: HTTPAuthorizationCredentials | None = await super().__call__(request)
+        credentials: HTTPAuthorizationCredentials | None = await super().__call__(
+            request
+        )
 
         if credentials is None:
             raise InvalidToken()

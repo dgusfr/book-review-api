@@ -4,7 +4,6 @@ from src.controllers import auth_router, book_router, review_router, tags_router
 from src.core.exception_handlers import register_all_errors
 from src.core.middleware import register_middleware
 
-
 version = "v1"
 version_prefix = f"/api/{version}"
 

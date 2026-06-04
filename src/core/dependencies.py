@@ -5,7 +5,6 @@ from src.core.database import get_session
 from src.core.security.jwt import AccessTokenBearer
 from src.core.services.user_service import UserService
 
-
 user_service = UserService()
 
 

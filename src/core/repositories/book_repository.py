@@ -30,7 +30,9 @@ class BookRepository:
         await session.refresh(book)
         return book
 
-    async def update(self, book: Book, update_data: dict, session: AsyncSession) -> Book:
+    async def update(
+        self, book: Book, update_data: dict, session: AsyncSession
+    ) -> Book:
         for key, value in update_data.items():
             setattr(book, key, value)
 

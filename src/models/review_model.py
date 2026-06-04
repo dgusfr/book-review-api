@@ -24,9 +24,7 @@ class Review(SQLModel, table=True):
         )
     )
     rating: int = Field(lt=5)
-    review_text: str = Field(
-        sa_column=Column(pg.VARCHAR, nullable=False)
-    )
+    review_text: str = Field(sa_column=Column(pg.VARCHAR, nullable=False))
     user_uid: Optional[uuid.UUID] = Field(
         default=None,
         foreign_key="users.uid",
@@ -35,12 +33,8 @@ class Review(SQLModel, table=True):
         default=None,
         foreign_key="books.uid",
     )
-    created_at: datetime = Field(
-        sa_column=Column(pg.TIMESTAMP, default=datetime.now)
-    )
-    update_at: datetime = Field(
-        sa_column=Column(pg.TIMESTAMP, default=datetime.now)
-    )
+    created_at: datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now))
+    update_at: datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now))
 
     user: Optional["User"] = Relationship(back_populates="reviews")
     book: Optional["Book"] = Relationship(back_populates="reviews")
