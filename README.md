@@ -917,18 +917,18 @@ poetry run ruff check .
 
 ---
 
-### Rodar formatação com Black
+### Aplicar correções automáticas com Ruff
 
 ```bash
-poetry run black .
+poetry run ruff check --fix .
 ```
 
 ---
 
-### Ordenar imports com Isort
+### Rodar formatação com Ruff
 
 ```bash
-poetry run isort .
+poetry run ruff format .
 ```
 
 ---

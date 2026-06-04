@@ -37,12 +37,6 @@ package-mode = false
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 
-[tool.black]
-target-version = ["py313"]
-
-[tool.isort]
-profile = "black"
-
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
@@ -50,9 +44,7 @@ build-backend = "poetry.core.masonry.api"
 [dependency-groups]
 dev = [
     "pytest (>=9.0.3,<10.0.0)",
-    "black (>=26.5.1,<27.0.0)",
     "flake8 (>=7.3.0,<8.0.0)",
     "pytest-asyncio (>=1.4.0,<2.0.0)",
-    "ruff (>=0.15.15,<0.16.0)",
-    "isort (>=8.0.1,<9.0.0)"
+    "ruff (>=0.15.15,<0.16.0)"
 ]

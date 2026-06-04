@@ -229,7 +229,9 @@ async def password_reset_request(
 
     return JSONResponse(
         content={
-            "message": "Please check your email for instructions to reset your password",
+            "message": (
+                "Please check your email for instructions to reset your password"
+            ),
         },
         status_code=status.HTTP_200_OK,
     )
