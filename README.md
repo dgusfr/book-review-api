@@ -235,7 +235,7 @@ book-review-api/
 │   ├── test_reviews.py
 │   └── test_tags.py
 │
-├── .env.example
+├── .env
 ├── .gitignore
 ├── alembic.ini
 ├── compose.yml
@@ -249,17 +249,16 @@ book-review-api/
 
 ## Pré-requisitos
 
-Para rodar localmente sem Docker:
+Para rodar a API na sua máquina usando banco e Redis no Docker:
 
-- Python instalado;
-- Poetry instalado;
-- PostgreSQL instalado e rodando;
-- Redis instalado e rodando.
-
-Para rodar com Docker:
-
+- Python 3.13 ou superior;
+- Poetry;
 - Docker;
 - Docker Compose.
+
+Nesse modo, o Docker é usado apenas para subir PostgreSQL e Redis. Por isso, não é necessário rodar `docker build`.
+
+Para rodar a API e o Celery também dentro de containers, use a seção [Como rodar com Docker](#como-rodar-com-docker). Nesse caso, o build da imagem da aplicação é necessário.
 
 ---
 
@@ -267,62 +266,84 @@ Para rodar com Docker:
 
 Crie um arquivo `.env` na raiz do projeto.
 
-Você pode copiar o arquivo de exemplo:
+Se precisar gerar um valor para `JWT_SECRET`, use:
 
 ```bash
-cp .env.example .env
+openssl rand -hex 32
 ```
+
+Para rodar localmente com PostgreSQL e Redis expostos pelo Docker, confira estes valores no `.env`:
+
+```env
+DOMAIN=localhost:8000
+JWT_SECRET=<uma-string-aleatoria>
+JWT_ALGORITHM=HS256
+DATABASE_URL=postgresql+asyncpg://postgres:postgres@localhost:5432/bookly
+REDIS_URL=redis://localhost:6379/0
+MAIL_FROM=bookly@example.com
+```
+
+`MAIL_FROM` precisa ter formato de e-mail válido, mesmo em desenvolvimento. Se ficar vazio, a aplicação pode falhar ao iniciar porque o FastAPI-Mail valida essa configuração.
 
 ---
 
 ## Como rodar localmente
 
-### 1. Clone o projeto
+Este é o fluxo recomendado para desenvolvimento: PostgreSQL e Redis no Docker, API rodando localmente com Poetry.
+
+### 1. Entre na pasta do projeto
 
 ```bash
-git clone https://github.com/dgusfr/book-review-api.git
 cd book-review-api
 ```
 
 ---
 
-### 2. Instale as dependências
+### 2. Crie e configure o `.env`
+
+Crie ou edite o arquivo `.env` na raiz do projeto e use as URLs locais:
+
+```env
+DATABASE_URL=postgresql+asyncpg://postgres:postgres@localhost:5432/bookly
+REDIS_URL=redis://localhost:6379/0
+DOMAIN=localhost:8000
+JWT_SECRET=<uma-string-aleatoria>
+JWT_ALGORITHM=HS256
+MAIL_FROM=bookly@example.com
+```
+
+---
+
+### 3. Instale as dependências
 
 ```bash
 poetry install
 ```
 
-Caso o `poetry.lock` precise ser atualizado:
-
-```bash
-poetry lock
-poetry install
-```
+Não rode `poetry lock` normalmente. Use `poetry lock` apenas se você realmente quiser atualizar o arquivo `poetry.lock`.
 
 ---
 
-### 3. Configure o `.env`
+### 4. Suba PostgreSQL e Redis no Docker
 
 ```bash
-cp .env.example .env
+docker compose up -d db redis
 ```
 
-Depois edite o arquivo `.env` com os dados do seu ambiente local.
+Esse comando não faz build da aplicação. Ele baixa/sobe apenas as imagens prontas do PostgreSQL e Redis.
 
----
+Confira os containers:
 
-### 4. Crie o banco no PostgreSQL
-
-Acesse o PostgreSQL e crie o banco:
-
-```sql
-CREATE DATABASE bookly;
+```bash
+docker compose ps
 ```
 
-Se estiver usando o usuário/senha padrão do `.env`, a URL esperada é:
+O `compose.yml` já cria o banco `bookly` com:
 
 ```text
-postgresql+asyncpg://postgres:postgres@localhost:5432/bookly
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_DB=bookly
 ```
 
 ---
@@ -331,6 +352,18 @@ postgresql+asyncpg://postgres:postgres@localhost:5432/bookly
 
 ```bash
 poetry run alembic upgrade head
+```
+
+Para conferir a migration atual:
+
+```bash
+poetry run alembic current
+```
+
+Para conferir as tabelas no PostgreSQL:
+
+```bash
+docker compose exec db psql -U postgres -d bookly -c "\dt"
 ```
 
 ---
@@ -367,20 +400,48 @@ http://localhost:8000/api/v1/openapi.json
 
 ---
 
-## Como rodar com Docker
+### 7. Rode o Celery opcionalmente
 
-### 1. Configure o `.env`
+O Celery é usado para tarefas em background, como envio de e-mail.
 
 ```bash
-cp .env.example .env
+poetry run celery -A src.core.tasks.celery_app.c_app worker --loglevel=info
+```
+
+Se você não configurar SMTP real, endpoints que enfileiram e-mail podem criar tarefas, mas o envio real pode falhar no worker.
+
+---
+
+### 8. Pare os serviços de infraestrutura
+
+```bash
+docker compose down
+```
+
+Para apagar também o volume do banco e começar do zero:
+
+```bash
+docker compose down -v
 ```
 
 ---
 
-### 2. Suba os containers
+## Como rodar com Docker
+
+Use este fluxo quando quiser rodar API, Celery, PostgreSQL e Redis dentro do Docker.
+
+### 1. Configure o `.env`
+
+Crie ou edite o arquivo `.env` na raiz do projeto.
+
+Dentro do Docker Compose, o arquivo `compose.yml` sobrescreve `DATABASE_URL` e `REDIS_URL` para usar os hosts internos `db` e `redis`.
+
+---
+
+### 2. Suba os containers com build
 
 ```bash
-docker compose up --build
+docker compose up --build -d
 ```
 
 O Docker Compose sobe os serviços:
@@ -394,15 +455,27 @@ O Docker Compose sobe os serviços:
 
 ### 3. Rode as migrations dentro do container
 
-Em outro terminal:
-
 ```bash
-docker compose exec web alembic upgrade head
+docker compose exec web poetry run alembic upgrade head
 ```
 
 ---
 
-### 4. Acesse a API
+### 4. Veja os logs
+
+```bash
+docker compose logs -f web
+```
+
+Para ver todos os serviços:
+
+```bash
+docker compose logs -f
+```
+
+---
+
+### 5. Acesse a API
 
 ```text
 http://localhost:8000
@@ -416,7 +489,7 @@ http://localhost:8000/api/v1/docs
 
 ---
 
-### 5. Parar os containers
+### 6. Parar os containers
 
 ```bash
 docker compose down
@@ -441,7 +514,7 @@ poetry run alembic upgrade head
 Com Docker:
 
 ```bash
-docker compose exec web alembic upgrade head
+docker compose exec web poetry run alembic upgrade head
 ```
 
 ---
@@ -500,6 +573,12 @@ Rodar todos os testes:
 
 ```bash
 poetry run pytest
+```
+
+Rodar com saída resumida:
+
+```bash
+poetry run pytest -q
 ```
 
 Rodar com saída detalhada:
@@ -918,7 +997,7 @@ poetry run alembic upgrade head
 Ou, com Docker:
 
 ```bash
-docker compose exec web alembic upgrade head
+docker compose exec web poetry run alembic upgrade head
 ```
 
 ---
@@ -930,7 +1009,7 @@ Para envio real de e-mail, configure:
 ```env
 MAIL_USERNAME=
 MAIL_PASSWORD=
-MAIL_FROM=
+MAIL_FROM=bookly@example.com
 ```
 
 Para Gmail, normalmente é necessário usar senha de app.

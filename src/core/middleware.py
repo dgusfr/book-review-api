@@ -40,6 +40,7 @@ def register_middleware(app: FastAPI) -> None:
         allowed_hosts=[
             "localhost",
             "127.0.0.1",
+            "testserver",
             "bookly-api-dc03.onrender.com",
             "0.0.0.0",
         ],
